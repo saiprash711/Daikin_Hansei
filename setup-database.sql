@@ -54,9 +54,17 @@ CREATE TABLE IF NOT EXISTS upload_history (
     status VARCHAR(20) DEFAULT 'completed'
 );
 
--- Insert default admin user (password: 'admin123')
+-- Insert default users with common demo credentials
+-- Password hashes are bcrypt hashes for the respective passwords
 INSERT INTO users (username, password, full_name, email, role) VALUES 
-('admin', '$2a$10$8K.Q6MKQfGHKU9IiEPZTSes0XUcXb0oBZJvQ7ZNtqLfyT0C8VHI7i', 'Administrator', 'admin@hansei.com', 'admin')
+-- smartuser / password123
+('smartuser', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Smart User', 'smartuser@hansei.com', 'admin'),
+-- normaluser / password123  
+('normaluser', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Normal User', 'normaluser@hansei.com', 'user'),
+-- admin / admin123
+('admin', '$2a$10$8K.Q6MKQfGHKU9IiEPZTSes0XUcXb0oBZJvQ7ZNtqLfyT0C8VHI7i', 'Administrator', 'admin@hansei.com', 'admin'),
+-- demo / demo123
+('demo', '$2a$10$7ZwONGi2nw9.jXU5Zy4D9.bQl4vLKVc6rLfOWO3fZQwIL7gLxCdPS', 'Demo User', 'demo@hansei.com', 'user')
 ON CONFLICT (username) DO NOTHING;
 
 -- Insert sample branches
