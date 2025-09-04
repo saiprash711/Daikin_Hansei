@@ -27,48 +27,33 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Simple authentication for demo - in production you'd use a real database
-    let user;
-    let validPassword = false;
-    
-    try {
-      // Try database first
-      const userResult = await pgPool.query(
-        'SELECT * FROM users WHERE username = $1',
-        [username]
-      );
+    // Find user in database
+    const userResult = await pgPool.query(
+      'SELECT * FROM users WHERE username = $1',
+      [username]
+    );
 
-      if (userResult.rows.length > 0) {
-        user = userResult.rows[0];
-        validPassword = await bcrypt.compare(password, user.password);
-      }
-    } catch (dbError) {
-      console.log('Database not available, using fallback authentication');
-      // Fallback authentication for demo
-      if (username === 'admin' && password === 'password') {
-        user = { id: 1, username: 'admin', role: 'admin' };
-        validPassword = true;
-      } else if (username === 'demo' && password === 'demo') {
-        user = { id: 2, username: 'demo', role: 'user' };
-        validPassword = true;
-      }
-    }
-
-    if (!user || !validPassword) {
+    if (userResult.rows.length === 0) {
       return res.status(401).json({
         error: 'Invalid username or password'
       });
     }
 
-    // Update last login (if database is available)
-    try {
-      await pgPool.query(
-        'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1',
-        [user.id]
-      );
-    } catch (dbError) {
-      console.log('Could not update last login time (database unavailable)');
+    const user = userResult.rows[0];
+
+    // Verify password
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return res.status(401).json({
+        error: 'Invalid username or password'
+      });
     }
+
+    // Update last login
+    await pgPool.query(
+      'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1',
+      [user.id]
+    );
 
     // Generate JWT token
     const token = jwt.sign(
