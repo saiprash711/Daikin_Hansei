@@ -1,0 +1,29 @@
+/* Tailwind CSS for Hansei Chennai Dashboard */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for Chennai Dashboard */
+.bg-gradient-purple-blue {
+  background: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+}
+
+.text-gradient-purple {
+  background: linear-gradient(45deg, #8b5cf6, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.shadow-purple {
+  box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.1), 0 2px 4px -1px rgba(139, 92, 246, 0.06);
+}
+
+.border-purple-light {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  transition: all 0.3s ease;
+}
