@@ -24,12 +24,13 @@ const allowedOrigins = [
   'http://localhost',
   'http://127.0.0.1', 
   'null', // For local file testing
-  'https://chennai-fe.vercel.app', // FIXED: Corrected URL without trailing slash
-  'https://chennai-frontend.vercel.app', // Keep both variants just in case
+  'https://chennai-fe.vercel.app',
+  'https://chennai-frontend.vercel.app',
   'https://daikin-n9wy.onrender.com', // Your backend URL
   'https://16f6cc8fd36d.ngrok-free.app', // Current ngrok backend
   'https://*.ngrok-free.app', // Allow all ngrok free domains
-  'https://*.ngrok.io' // Allow all ngrok domains
+  'https://*.ngrok.io', // Allow all ngrok domains
+  'https://*.onrender.com' // Allow all Render domains
 ];
 
 // More permissive CORS for development
@@ -37,15 +38,10 @@ const corsOptions = {
   origin: function (origin, callback) {
     console.log('🔍 CORS Check - Origin:', origin);
     
-    // Always allow requests with no origin in development (file:// access)
+    // Always allow requests with no origin (same-origin requests, file:// access, etc.)
     if (!origin) {
-      if (isDevelopment) {
-        console.log('✅ No origin - allowing request in development (for file:// access)');
-        return callback(null, true);
-      } else {
-        console.log('✅ No origin - allowing request');
-        return callback(null, true);
-      }
+      console.log('✅ No origin - allowing same-origin request');
+      return callback(null, true);
     }
 
     // Explicitly allow null origin (file:// protocol)
