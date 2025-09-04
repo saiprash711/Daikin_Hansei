@@ -109,10 +109,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files (HTML, CSS, JS, images)
-app.use(express.static('.'));
-
-// Serve the dashboard from hansei-dashboard folder
-app.use('/dashboard', express.static('../hansei-dashboard'));
+app.use(express.static(__dirname));
 
 // Add request logging for debugging
 app.use((req, res, next) => {
@@ -124,12 +121,7 @@ app.use((req, res, next) => {
 // HEALTH CHECK ROUTES (MOVED UP FOR PRIORITY)
 // ============================================================================
 app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Hansei Backend is WORKING!',
-    cors: 'ENABLED - Fixed Configuration',
-    timestamp: new Date().toISOString(),
-    origin: req.get('Origin') || 'null'
-  });
+  res.sendFile(require('path').join(__dirname, 'index.html'));
 });
 
 app.get('/api/health', (req, res) => {
@@ -143,9 +135,18 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+app.get('/api/status', (req, res) => {
+  res.json({ 
+    message: 'Hansei Backend is WORKING!',
+    cors: 'ENABLED - Fixed Configuration',
+    timestamp: new Date().toISOString(),
+    origin: req.get('Origin') || 'null'
+  });
+});
+
 // Serve dashboard route
 app.get('/dashboard', (req, res) => {
-  res.sendFile(require('path').join(__dirname, '../hansei-dashboard/index.html'));
+  res.sendFile(require('path').join(__dirname, 'index.html'));
 });
 
 // ============================================================================
